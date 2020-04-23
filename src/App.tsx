@@ -1,17 +1,16 @@
-import React, {lazy, Suspense} from 'react';
+import React from 'react';
 import './App.scss';
 
-const Mapbox = lazy(() => import('./mapbox/Mapbox'));
+import Mapbox from './mapbox/Mapbox'
 
+// SUPENSION, IN CASE WE ONLY WANT TO RENDER MAP AFTER USER TRIGGER EVENT
+// const Mapbox = lazy(() => import('./mapbox/Mapbox'));
 
 function App() {
     return (
         <div className="App">
             <div className={'mapbox'}>
-                {/*TODO: Implement spining wheel*/}
-                <Suspense fallback={'LOADING'}>
-                    <Mapbox />
-                </Suspense>
+                <Mapbox/>
             </div>
         </div>
     );

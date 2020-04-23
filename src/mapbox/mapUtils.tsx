@@ -6,8 +6,6 @@ const getCoords = ( map: mapboxgl.Map, stateSetter: Function ) => {
     stateSetter({currentLng: lng, currentLat: lat });
 };
 
-
-
 export const mapUtils = {
     getCoords: getCoords
 }
