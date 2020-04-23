@@ -10,7 +10,6 @@ A Reusable React Component for General 2D Mapping
 * [Contributing](#contributing)
 * [Authors](#authors)
 * [License](#license)
-*
 
 ### Installation
 
@@ -58,4 +57,4 @@ Please reach out to the author of this project directly at <jonathanengelbert@gm
 
 ### License
 
-This project is licensed under the MIT License - see the [LICENSE.md]('./LICENSE.md') file for details
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
