@@ -2,7 +2,7 @@
 
 A Reusable React Component for General 2D Mapping
 
-##Table of Contents
+## Table of Contents
 
 * [Installation](#installation)
 * [What is the project for?](#what-is-the-project-for)
