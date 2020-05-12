@@ -1,20 +1,30 @@
-import React, {useState, useEffect, useRef, FunctionComponent} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import mapboxgl from 'mapbox-gl'
+
 import {mapboxStyles} from './mapboxStyles';
 import {mapUtils} from './mapUtils';
+import {isEmpty} from "../utils/helpers";
 
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 import './mapbox.scss';
 
-const Mapbox: FunctionComponent = () => {
+// layer style definitions
+const stationsStyle = new mapboxStyles.pointStyle('red').generateStyle();
+const homicideStyle = new mapboxStyles.pointStyle().generateStyle();
+const neighborhoodsStyle = new mapboxStyles.polygonStyle('#4ea1df', .2, 'white').generateStyle();
+
+type Props = {
+    layers: any
+}
+
+const Mapbox: React.FC<Props> = (props: Props) => {
     const mapContainer = useRef<HTMLDivElement>(null);
     const [map, setMap] = useState<mapboxgl.Map>();
-    // const [tilesLoaded, setTilesLoaded] = useState<Boolean>(false);
     const [currentLocation, setCurrentLocation] = useState({currentLat: null, currentLng: null});
 
     useEffect(() => {
-        // check if mapbox key is available
+        console.log('UPDATING MAP');
         const mapboxKey = process.env.REACT_APP_MAPBOX_KEY;
 
         if (mapboxKey) {
@@ -33,31 +43,53 @@ const Mapbox: FunctionComponent = () => {
             map.on("load", () => {
                 setMap(map);
                 map.resize();
-                // setTilesLoaded(map.areTilesLoaded());
             });
             map.on('move', () => mapUtils.getCoords(map, setCurrentLocation));
-
-
-            // add points
-            map.on('load', () => {
-                console.log('RUNNING ADD POINTS');
-                map.addSource('myData', {
-                    "type": "geojson",
-                    // server
-                    "data": 'http://localhost:8001/geojson'
-                });
-
-                map.addLayer(
-                    {
-                        "id": "myData",
-                        "type": "circle",
-                        "source": "myData"
-                    }
-                )
-            });
         };
         if (!map && mapboxKey) initializeMap({setMap, mapContainer});
     }, [map]);
+
+    useEffect(() => {
+        // console.log('UPDATING LAYERS');
+
+        if (!isEmpty(props.layers) && map) {
+            for (let l in props.layers) {
+                let layer = props.layers[l];
+
+                if (!map.getSource(layer.id)) {
+                    console.log('adding', layer.id);
+                    map.addSource(
+                        layer.id,
+                        {
+                            "type": "geojson",
+                            // server request, from parent component
+                            data: layer
+                        });
+
+                    // layer building: assign style and layer type here
+                    if (layer.id === 'stations') {
+                        layer = new mapUtils.BuildLayer(layer.id, 'circle', stationsStyle);
+                    }
+
+                    if (layer.id === 'homicides') {
+                        layer = new mapUtils.BuildLayer(layer.id, 'circle', homicideStyle);
+                    }
+
+                    if (layer.id === 'neighborhoods') {
+                        layer = new mapUtils.BuildLayer(layer.id, 'fill', neighborhoodsStyle);
+                    }
+
+                    map.addLayer(layer);
+
+                    // handle layer order
+                    if(map.getSource('neighborhoods') && map.getSource('stations')){
+                        map.moveLayer('neighborhoods', 'stations');
+                    }
+                }
+            }
+        }
+        // console.log(props.layers);
+    }, [props.layers, map]);
 
     return (
         <div ref={mapContainer}
@@ -67,7 +99,7 @@ const Mapbox: FunctionComponent = () => {
                 map ?
                     <div className={'map-controls'}>
                         <p>{currentLocation.currentLng} {currentLocation.currentLat} </p>
-                        <button onClick={() => map.flyTo({center: [-74, 42]})}>TEST</button>
+                        <button onClick={() => map.flyTo({center: [-73.9836, 40.7337], zoom: 12})}>HOME</button>
                     </div>
                     :
                     <CircularProgress className={'spinning-wheel-white'}/>
