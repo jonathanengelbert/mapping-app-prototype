@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import mapboxgl from 'mapbox-gl'
+import mapboxgl, {MapboxGeoJSONFeature} from 'mapbox-gl'
 
 import {mapboxStyles} from './mapboxStyles';
 import {mapUtils} from './mapUtils';
@@ -15,10 +15,12 @@ const homicideStyle = new mapboxStyles.pointStyle().generateStyle();
 const neighborhoodsStyle = new mapboxStyles.polygonStyle('#4ea1df', .2, 'white').generateStyle();
 
 type Props = {
-    layers: any
+    layers: any,
+    activeFeature: MapboxGeoJSONFeature | null,
+    children?: any;
 }
 
-const Mapbox: React.FC<Props> = (props: Props) => {
+const Map: React.FC<Props> = (props: Props) => {
     const mapContainer = useRef<HTMLDivElement>(null);
     const [map, setMap] = useState<mapboxgl.Map>();
     const [currentLocation, setCurrentLocation] = useState({currentLat: null, currentLng: null});
@@ -50,14 +52,13 @@ const Mapbox: React.FC<Props> = (props: Props) => {
     }, [map]);
 
     useEffect(() => {
-        // console.log('UPDATING LAYERS');
-
+        console.log('UPDATING LAYERS');
         if (!isEmpty(props.layers) && map) {
             for (let l in props.layers) {
                 let layer = props.layers[l];
 
                 if (!map.getSource(layer.id)) {
-                    console.log('adding', layer.id);
+                    // console.log('adding', layer.id);
                     map.addSource(
                         layer.id,
                         {
@@ -82,7 +83,7 @@ const Mapbox: React.FC<Props> = (props: Props) => {
                     map.addLayer(layer);
 
                     // handle layer order
-                    if(map.getSource('neighborhoods') && map.getSource('stations')){
+                    if (map.getSource('neighborhoods') && map.getSource('stations')) {
                         map.moveLayer('neighborhoods', 'stations');
                     }
                 }
@@ -90,6 +91,18 @@ const Mapbox: React.FC<Props> = (props: Props) => {
         }
         // console.log(props.layers);
     }, [props.layers, map]);
+
+    useEffect(() => {
+        console.log("ACTIVE FEATURE:", props.activeFeature);
+        if(props.activeFeature?.geometry){
+            // @ts-ignore
+            const coordinates = props.activeFeature.geometry.coordinates;
+            console.log(coordinates);
+            // @ts-ignore
+            map?.jumpTo({center: coordinates, zoom: 18});
+        }
+        // map?.flyTo(props.activeFeature?.geometry)
+    }, [map, props.activeFeature]);
 
     return (
         <div ref={mapContainer}
@@ -99,7 +112,7 @@ const Mapbox: React.FC<Props> = (props: Props) => {
                 map ?
                     <div className={'map-controls'}>
                         <p>{currentLocation.currentLng} {currentLocation.currentLat} </p>
-                        <button onClick={() => map.flyTo({center: [-73.9836, 40.7337], zoom: 12})}>HOME</button>
+                        <button onClick={() => map.flyTo({center: [-73.9836, 40.7337], zoom: 12, bearing: 0, pitch: 0})}>HOME</button>
                     </div>
                     :
                     <CircularProgress className={'spinning-wheel-white'}/>
@@ -107,5 +120,5 @@ const Mapbox: React.FC<Props> = (props: Props) => {
         </div>
     );
 };
-export default Mapbox;
+export default Map;
 
