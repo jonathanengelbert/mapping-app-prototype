@@ -1,30 +1,26 @@
 import React, {useEffect, useState} from 'react';
 import './App.scss';
 
-import Mapbox from './mapbox/Mapbox';
+import Map from "./Map/Map";
+import List from "./List/List";
 import {isEmpty, getLayer} from "./utils/helpers";
 import {Feature} from 'geojson';
+import {MapboxGeoJSONFeature} from "mapbox-gl";
 
+// LAYER REQUESTS
 const stationsUrl = 'http://localhost:8001/geojson-all-stations';
 const homicidesUrl = 'http://localhost:8001/geojson-all-homicides';
 const neighborhoodsUrl = 'http://localhost:8001/geojson-all-neighborhoods';
 
+// TYPES AND MODELS
+
 function App() {
+    // state management: might need more sophisticated solutions depending on implementation
     const [layers, setLayer] = useState<Array<Feature>>([]);
+    const [activeFeature, setActiveFeature] = useState<MapboxGeoJSONFeature | null> (null);
 
     async function addLayer(endPoint: string, layerName: string) {
-        let layerExists = false;
         let data: any;
-        layers.forEach(l => {
-            if (l.id === layerName) {
-                layerExists = true
-            }
-        });
-
-        // request does not happen if layer is already in state
-        if (layerExists) {
-            return layers;
-        }
 
         data = await getLayer(endPoint, layerName);
         setLayer((layers) => {
@@ -54,17 +50,21 @@ function App() {
             initialDataLoad();
             // console.log('INITIAL DATA FETCHED');
         }
-        console.log(layers);
     }, [layers]);
 
     return (
         <div className="App">
             <button onClick={async () => addLayer(homicidesUrl, 'homicides')}>GET DATA</button>
-            <div className={'mapbox'}>
-                <Mapbox
+            <div className={'map-container'}>
+                <Map
                     layers={layers}
+                    activeFeature={activeFeature}
                 />
             </div>
+            <List
+                data={layers[0]}
+                setActiveFeature={setActiveFeature}
+            />
         </div>
     );
 }

@@ -21,7 +21,8 @@ class PointStyle  {
                 "base": this.baseRadius,
                 "stops": [
                     [12, 2],
-                    [22, 180]
+                    [16, 15],
+                    [22, 30]
                 ]
             },
             "circle-color": this.color,
