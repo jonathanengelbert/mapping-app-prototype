@@ -5,7 +5,8 @@ const darkStyle = 'mapbox://styles/mapbox/dark-v10';
 const customStyle = 'mapbox://styles/jonathanengelbert/ck5egnrfz06cu1iq8x7hyy4uy';
 
 // layer styles
-class PointStyle  {
+// TODO: add active color argument
+class PointStyle {
     private readonly color: string;
     private readonly baseRadius: number;
 
@@ -25,12 +26,17 @@ class PointStyle  {
                     [22, 30]
                 ]
             },
-            "circle-color": this.color,
+            "circle-color": [
+                "case",
+                ['boolean', ['feature-state', 'hover'], false],
+                'white',
+                this.color,
+            ]
         }
     }
 }
 
-class PolygonStyle  {
+class PolygonStyle {
     private readonly fillColor: string;
     private readonly fillOutlineColor: string;
     private readonly fillOpacity: number;
@@ -55,7 +61,7 @@ export const mapboxStyles = {
     darkStyle: darkStyle,
     customStyle: customStyle,
     // layerStyles
-    pointStyle: PointStyle ,
+    pointStyle: PointStyle,
     polygonStyle: PolygonStyle,
 };
 
