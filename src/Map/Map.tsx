@@ -25,7 +25,7 @@ const Map: React.FC<Props> = (props: Props) => {
     const [map, setMap] = useState<mapboxgl.Map>();
     const [home] = useState(new mapboxgl.LngLat(-73.9836, 40.7337));
     const [currentLocation, setCurrentLocation] = useState({currentLat: null, currentLng: null});
-    const [currentFeature, setCurrentFeature] = useState<MapboxGeoJSONFeature>();
+    const [currentFeature, setCurrentFeature] = useState<MapboxGeoJSONFeature | null>(null);
 
 
     // map initialization
