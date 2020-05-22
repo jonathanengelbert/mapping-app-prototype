@@ -50,7 +50,6 @@ function App() {
 
     useEffect(() => {
         // add any datasets for initial load here
-
         const initialDataLoad = () => {
             addLayer(stationsUrl, 'stations');
             addLayer(neighborhoodsUrl, 'neighborhoods');
@@ -76,7 +75,6 @@ function App() {
                 />
             </div>
             <div>
-
                 {/*when using the List element, make sure to filter layer*/}
                 {/*by its id */}
                 <List

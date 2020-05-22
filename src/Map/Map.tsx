@@ -3,6 +3,7 @@ import mapboxgl, {MapboxGeoJSONFeature} from 'mapbox-gl'
 
 import {mapboxStyles} from './mapboxStyles';
 import {mapUtils} from './mapUtils';
+import {popupModelExampleTwo} from './popupModels';
 import {isEmpty} from "../utils/helpers";
 
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -50,8 +51,7 @@ const Map: React.FC<Props> = (props: Props) => {
                 setMap(map);
                 map.resize();
             });
-            map.on('move', () => mapUtils.getCoords(map, setCurrentLocation));
-
+            map.on('move', () => mapUtils.getCoordsCenter(map, setCurrentLocation));
             //hover implementation
             map.on('mouseenter', 'stations', function (e) {
 
@@ -80,6 +80,10 @@ const Map: React.FC<Props> = (props: Props) => {
                     );
                 }
                 hoveredStateId = null;
+            });
+            map.on('click', 'stations', (e) => {
+                const popup = mapUtils.makePopupInPlace(e, map, popupModelExampleTwo);
+                return(popup);
             });
         };
         // only create map object once and only if key is provided
@@ -136,7 +140,7 @@ const Map: React.FC<Props> = (props: Props) => {
 
             setCurrentFeature(props.activeFeature);
 
-            // see https://stackoverflow.com/questions/55621480/cant-access-coordinates-member-of-geojson-feature-collection
+            // see https://stackoverflow.com/questions/55621480/cant-access-coordinates-member-ofocus?: string, f-geojson-feature-collection
             if (props.activeFeature.geometry.type === 'Point') {
                 let [long, lat] = props.activeFeature.geometry.coordinates;
                 const coordinates = new mapboxgl.LngLat(long, lat);
