@@ -18,7 +18,7 @@ function App() {
 
     // node is used to listen to clicks outside of divs, for example, remove highlight
     // from active list element by clicking anywhere outside of the list itself or map canvas
-    const node = useRef<HTMLDivElement>();
+    const node = useRef<HTMLDivElement>(null);
 
     async function addLayer(endPoint: string, layerName: string) {
         const data = await getLayer(endPoint, layerName);
@@ -45,11 +45,11 @@ function App() {
         if (e.target.id !== 'app-container') {
             return
         }
+        setActiveFeature(null);
     }
 
     useEffect(() => {
         // add any datasets for initial load here
-
         const initialDataLoad = () => {
             addLayer(stationsUrl, 'stations');
             addLayer(neighborhoodsUrl, 'neighborhoods');
@@ -63,7 +63,7 @@ function App() {
     return (
         <div
             id={'app-container'}
-            // ref={node}
+            ref={node}
             onClick={e => handleClick(e)}
             className="App"
         >
@@ -75,12 +75,12 @@ function App() {
                 />
             </div>
             <div>
-
                 {/*when using the List element, make sure to filter layer*/}
                 {/*by its id */}
                 <List
                     data={layers.filter(e => e.id === 'stations')}
                     setActiveFeature={setActiveFeature}
+                    activeFeature={activeFeature}
                 />
             </div>
         </div>
