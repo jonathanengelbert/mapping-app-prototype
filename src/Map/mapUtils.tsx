@@ -34,11 +34,6 @@ const makePopupInPlace = (e: MapMouseEvent&EventData, map: mapboxgl.Map, popupMo
         .addTo(map);
 
     return popup;
-}
-
-// Creates a detailed popup with div element, by default on top right side of Canvas
-const makeDetailedPopup = () => {
-    return
 };
 
 class BuildLayer implements Layer {

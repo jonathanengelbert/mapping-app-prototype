@@ -4,6 +4,8 @@ import mapboxgl, {MapboxGeoJSONFeature} from 'mapbox-gl'
 import {mapboxStyles} from './mapboxStyles';
 import {mapUtils} from './mapUtils';
 import {popupModelExampleTwo} from './popupModels';
+import SidePopup from './SidePopup';
+
 import {isEmpty} from "../utils/helpers";
 
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -154,6 +156,9 @@ const Map: React.FC<Props> = (props: Props) => {
         <div ref={mapContainer}
              id={'map-container'}>
             {/*LOAD MAP ONLY AFTER "map" variable has been initialized. Might need to attach another listener here*/}
+            <SidePopup
+                activeFeature={props.activeFeature}
+            />
             {
                 map ?
                     <div className={'map-controls'}>
