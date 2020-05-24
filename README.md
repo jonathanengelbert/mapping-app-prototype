@@ -16,11 +16,13 @@ A Reusable React Component for General 2D Mapping
 In the future, this module will be available as a npm package.
 For now, clone repository and install locally using npm:
 
-`$ git clone https://github.com/jonathanengelbert/mapping-app-prototype.git`
+* `$ git clone https://github.com/jonathanengelbert/mapping-app-prototype.git`
 <br>
-`$ cd mapping-app-prototype && npm install`
+* `$ cd mapping-app-prototype && npm install`
 <br>
-`$ npm start`
+* Add a mapbox token to .env
+<br>
+* `$ npm start`
 
 ### What is the project for?
 
