@@ -1,7 +1,7 @@
 import React from 'react';
 import {PopupModelJSX} from "../popupModels";
 
-import './popupStyles.scss';
+import './sidePopupStyles.scss';
 
 type Props = {
     activeFeature: any | null | undefined

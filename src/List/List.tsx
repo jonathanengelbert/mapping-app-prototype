@@ -35,7 +35,7 @@ const List: React.FC<Props> = (props: Props) => {
     }
 
     return (
-        <div className={'list-container'}>
+        <div>
             {
                 stationList ?
                     <ul>

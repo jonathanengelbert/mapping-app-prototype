@@ -1,16 +1,16 @@
 import React, {useState, useEffect, useRef} from 'react';
 import mapboxgl, {MapboxGeoJSONFeature} from 'mapbox-gl'
 
-import {mapboxStyles} from './mapboxStyles';
+import {mapboxStyles} from './mapboxStyles'
 import {mapUtils} from './mapUtils';
-import {popupModelExampleTwo} from './popupModels';
-import SidePopup from './SidePopup';
+import {popupModelExampleTwo} from './Popup/popupModels';
+import SidePopup from './Popup/SidePopup';
 
 import {isEmpty} from "../utils/helpers";
 
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-import './mapbox.scss';
+import './mapStyles.scss';
 
 // layer style definitions
 const stationsStyle = new mapboxStyles.pointStyle('red').generateStyle();

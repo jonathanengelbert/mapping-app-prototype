@@ -15,7 +15,6 @@ const neighborhoodsUrl = 'http://localhost:8001/geojson-all-neighborhoods';
 function App() {
     const [layers, setLayer] = useState<Array<Feature>>([]);
     const [activeFeature, setActiveFeature] = useState<MapboxGeoJSONFeature | null>(null);
-
     // node is used to listen to clicks outside of divs, for example, remove highlight
     // from active list element by clicking anywhere outside of the list itself or map canvas
     const node = useRef<HTMLDivElement>(null);
@@ -67,14 +66,15 @@ function App() {
             onClick={e => handleClick(e)}
             className="App"
         >
-            <button onClick={async () => addLayer(homicidesUrl, 'homicides')}>GET DATA</button>
+            {/*This button demonstrates that data can be requested on click as well*/}
+            {/*<button onClick={async () => addLayer(homicidesUrl, 'homicides')}>GET DATA</button>*/}
             <div className={'map-container'}>
                 <Map
                     layers={layers}
                     activeFeature={activeFeature}
                 />
             </div>
-            <div>
+            <div className={'list-container'}>
                 {/*when using the List element, make sure to filter layer*/}
                 {/*by its id */}
                 <List

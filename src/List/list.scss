@@ -1,12 +1,14 @@
 .list-container {
-  max-height: 60vh;
-  width: 40%;
+  height: 100%;
+  width: 50%;
   position: relative;
+  overflow: scroll;
+  overflow-x: hidden;
 
   ul {
-    overflow: scroll;
     text-align: center;
     max-height: inherit;
+    padding: 0;
 
     li {
       color: #778396;
