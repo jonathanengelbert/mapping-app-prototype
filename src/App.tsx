@@ -9,8 +9,8 @@ import {MapboxGeoJSONFeature} from "mapbox-gl";
 
 // LAYER REQUESTS
 const stationsUrl = 'http://localhost:8001/geojson-all-stations';
-const homicidesUrl = 'http://localhost:8001/geojson-all-homicides';
 const neighborhoodsUrl = 'http://localhost:8001/geojson-all-neighborhoods';
+// const homicidesUrl = 'http://localhost:8001/geojson-all-homicides';
 
 function App() {
     const [layers, setLayer] = useState<Array<Feature>>([]);

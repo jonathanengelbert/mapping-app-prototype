@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useState} from 'react';
 
 import './list.scss';
 import {MapboxGeoJSONFeature} from "mapbox-gl";
@@ -11,38 +11,55 @@ type Props = {
 }
 
 const List: React.FC<Props> = (props: Props) => {
-    let stations: Array<MapboxGeoJSONFeature>;
-    let stationList: any;
+    const [userInput, setUserInput] = useState<string | null>();
 
-    function activateListItem(s: MapboxGeoJSONFeature, e: any) {
-        props.setActiveFeature(s);
+    const activateListItem = useCallback((f: MapboxGeoJSONFeature, e: any) => {
+        props.setActiveFeature(f);
+    }, [props]);
+
+
+    function filterList(e: { target: { value: any; }; }) {
+        if (e.target.value.length < 1) {
+            return setUserInput(null);
+        }
+        const userInput = e.target.value;
+        return setUserInput(userInput);
     }
 
-    if (props.data[0]) {
-        stations = props.data[0].features.map((s: MapboxGeoJSONFeature) => s);
-        stationList = stations.map(s => {
-            return s.properties ? (
-                <li
-                    className={
-                        props.activeFeature && props.activeFeature.properties.id
-                        === s.properties.id ? 'active' : ''}
-                    key={s.properties.id}
-                    onClick={e => activateListItem(s, e)}
-                >{s.properties.long_name}
-                </li>
-            ) : null
-        });
-    }
+
+    const listItem = (feature: any) => {
+        return (
+            <li
+                className={
+                    props.activeFeature && props.activeFeature.properties.id
+                    === feature.properties.id ? 'active' : ''}
+                key={feature.properties.id}
+                onClick={e => activateListItem(feature, e)}
+
+            >{feature.properties.long_name}</li>
+        )
+    };
 
     return (
         <div>
-            {
-                stationList ?
-                    <ul>
-                        {stationList}
-                    </ul>
-                    : <CircularProgress className={'spinning-wheel-blue'}/>
-            }
+            <ul>
+                <input onChange={filterList}/>
+                {
+                    props.data[0]
+                        ?
+                        props.data[0].features.map((f: any) => {
+                            if (!userInput) {
+                                return listItem(f);
+                            }
+                            // name of list label must be entered here
+                            if (f.properties.long_name.toLowerCase().includes(userInput.toLowerCase())) {
+                                return listItem(f);
+                            }
+                            return null;
+                        })
+                        : <CircularProgress className={'spinning-wheel-blue'}/>
+                }
+            </ul>
         </div>
     )
 };
